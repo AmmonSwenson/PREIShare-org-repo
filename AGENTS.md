@@ -9,6 +9,52 @@ Before editing files for a substantial task:
 - Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
 <!-- intent-skills:end -->
 
+# PREIshare onboarding
+
+Skim this in two minutes. Cursor project rules live in [`.cursor/rules/preishare.mdc`](.cursor/rules/preishare.mdc) (`alwaysApply: true`). Other tools should use that same file; do not fork a second copy. Legacy `.cursorrules` still exists — prefer `preishare.mdc` when they disagree.
+
+PREIshare is a real-estate intelligence product. This repo is one npm package at the root (`preishare-org-repo`), not a monorepo.
+
+## Stack (do not substitute)
+
+- Language: TypeScript
+- App framework: TanStack Start + React
+- Backend/data: Supabase, PostgreSQL, pgvector (intended; not in this tree yet)
+- Collaboration: Git + GitHub pull requests
+- Package manager: npm
+
+## Docs
+
+- [docs/onboarding/repo-map.md](docs/onboarding/repo-map.md) — verified paths and what not to touch
+- [docs/onboarding/team-orientation-notes.md](docs/onboarding/team-orientation-notes.md) — conventions and first-PR definition of done
+
+## Scripts (from `package.json` only)
+
+```bash
+npm install
+npm run dev      # Vite on port 3000
+npm run build
+npm run preview
+npm run generate-routes
+```
+
+There is no `test` script. Do not invent commands.
+
+## How agents should behave
+
+1. **Plan** — Restate the goal and list files you will touch. Read the repo map first.
+2. **Small diff** — Match neighboring code. No drive-by refactors. No extra libraries unless the human asks.
+3. **Verify** — Use the scripts above when needed. Do not merge. Open a GitHub pull request only when the human asks.
+
+Safe first surfaces: `docs/`, small `README.md` copy. Avoid unless tasked: `src/routeTree.gen.ts`, lockfiles, toolchain config, auth, billing, migrations, CI secrets.
+
+## Safety (same as the rules file)
+
+- Never commit `.env`, API keys, tokens, or connection strings.
+- Prefer the smallest diff that finishes the task.
+- Ask before deleting files.
+- Never print secrets. Document variable *names* only (for example `SUPABASE_URL`), not values.
+
 # Project context
 
 ## Scaffold commands
