@@ -15,6 +15,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | Path | What it is |
 | --- | --- |
 | `AGENTS.md` | Human and agent onboarding memory |
+| `CONTRIBUTORS.md` | Human list of people who have contributed |
 | `.cursor/rules/preishare.mdc` | Always-apply PREIshare agent rules |
 | `.cursorrules` | Legacy Cursor rules; prefer `preishare.mdc` |
 | `docs/onboarding/` | Orientation notes and this map |
