@@ -4,6 +4,6 @@ People who have completed PREIshare engineering onboarding and landed a first co
 
 | Name | GitHub | Role | Onboarded |
 | --- | --- | --- | --- |
-| Ammon Swenson | AmmonSwenson | Onboarding engineer | 2026-09-06 |
+| Ammon Swenson | [AmmonSwenson](https://github.com/AmmonSwenson) | Onboarding engineer | 2026-09-06 |
 
 <!-- Add a new row for yourself. Do not remove existing contributors. -->
