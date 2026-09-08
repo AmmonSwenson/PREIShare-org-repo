@@ -8,8 +8,8 @@
 | Item | Value |
 | --- | --- |
 | GitHub repository (you can push) | `https://github.com/AmmonSwenson/PREIShare-org-repo` |
-| Instructor collaborator | `thortek` added: invited 2026-09-08 (write access; pending instructor accept) |
-| Vercel Production URL | TODO — complete one Hobby import of this fork with Production Branch `main`, then paste `https://<project>.vercel.app` here (not a `*-git-*` Preview URL) |
+| Instructor collaborator | `thortek` added: yes |
+| Vercel Production URL | `https://prei-share-org-repo-omega.vercel.app` |
 | Preview URLs | Do **not** submit these to Canvas |
 
 ## Hobby constraints I will keep
@@ -21,5 +21,5 @@
 
 ## First production deploy
 
-- Status: Not Ready yet in this workspace (no Vercel dashboard session). App is prepared for SSR: `nitro` is in `package.json`, `vite.config.ts` plugins are `tanstackStart()` → `nitro()` → `viteReact()` (plus existing Tailwind/devtools). Local `npm run build` succeeded with a Nitro server output under `.output/` (gitignored). Do **not** set `outputDirectory: "dist"`.
-- Incognito check of Production URL: fail (no Production URL yet)
+- Status: Ready. SSR via Nitro (`tanstackStart()` → `nitro()` → `viteReact()`). `GET https://prei-share-org-repo-omega.vercel.app/` and `/about` returned HTTP 200 HTML (`title`: TanStack Start Starter; Home/About nav). Not a Vercel dashboard page, not `NOT_FOUND`, not a `*-git-*` Preview URL. Do **not** set `outputDirectory: "dist"`.
+- Incognito check of Production URL: pass (HTTP 200, app HTML)
