@@ -62,7 +62,7 @@
 | Commit message | Files touched | Addresses which comment # |
 | --- | --- | --- |
 | `fb7928e` docs: address mentor review on first-contribution PR | `CONTRIBUTORS.md`, `docs/onboarding/pr-description.md` | 1, 2, 4, 5 |
-| `4367cd2` docs: record simulated review response notes | `docs/onboarding/review-response-notes.md` | documents 1–5 |
+| `926220b` docs: record simulated review response notes | `docs/onboarding/review-response-notes.md` | documents 1–5 |
 
 Comment 3 produced no commit (declined squash).
 
