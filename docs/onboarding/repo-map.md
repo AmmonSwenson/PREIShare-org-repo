@@ -19,6 +19,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `.cursor/rules/preishare.mdc` | Always-apply PREIshare agent rules |
 | `.cursorrules` | Legacy Cursor rules; prefer `preishare.mdc` |
 | `docs/onboarding/` | Orientation notes and this map |
+| `docs/domain/` | Investor listing domain brief and field inventory (plain-language contract before later coding steps) |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
