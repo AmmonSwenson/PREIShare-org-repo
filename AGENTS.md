@@ -36,6 +36,7 @@ npm run dev      # Vite on port 3000
 npm run build
 npm run preview
 npm run generate-routes
+npm run typecheck  # tsc --noEmit; strict listing types live under src/types/
 ```
 
 There is no `test` script. Do not invent commands.
@@ -120,6 +121,7 @@ npm run dev      # Vite on port 3000
 npm run build
 npm run preview
 npm run generate-routes
+npm run typecheck
 ```
 
 ## Deployment notes

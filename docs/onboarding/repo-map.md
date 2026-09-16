@@ -23,6 +23,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
+| `src/types/` | Shared investor-listing types home (README + `.gitkeep`; domain modules come later) |
 | `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`) |
 | `src/components/` | `Header`, `Footer`, `ThemeToggle` |
 | `src/router.tsx` | Router factory |
@@ -33,7 +34,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 
 ## Scripts (do not invent others)
 
-`dev`, `build`, `preview`, `generate-routes` in `package.json`. No `test` script.
+`dev`, `build`, `preview`, `generate-routes`, `typecheck` (`tsc --noEmit`) in `package.json`. No `test` script.
 
 ## Rarely touch as a first contributor
 

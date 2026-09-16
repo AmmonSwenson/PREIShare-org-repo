@@ -15,7 +15,7 @@ PREIshare is a real-estate intelligence product. This repo is a single npm packa
 - App framework: TanStack Start + React
 - Backend/data: Supabase, PostgreSQL, pgvector (intended; no Supabase client or migrations are in this tree yet)
 - Collaboration: Git + GitHub pull requests
-- Package manager: npm (scripts in `package.json`: `dev`, `build`, `preview`, `generate-routes`)
+- Package manager: npm (scripts in `package.json`: `dev`, `build`, `preview`, `generate-routes`, `typecheck`)
 
 ## Where to work (new contributors)
 
