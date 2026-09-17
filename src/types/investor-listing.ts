@@ -31,13 +31,16 @@ export interface InvestorListingBase {
   address: Address;
 
   /**
-   * Deal metrics. Optional as a whole object so drafts can exist before
-   * asking price and returns are underwritten. When present, askingPrice
-   * and currency inside FinancialSummary are required.
+   * Deal metrics. Optional on draft/archived; required on investor-visible
+   * statuses (see the union branches). When present, askingPrice and
+   * currency inside FinancialSummary are required.
    */
   financialSummary?: FinancialSummary;
 
-  /** One or more people associated with this listing. */
+  /**
+   * People associated with this listing. Draft/archived may be empty;
+   * investor-visible statuses require at least one contact (union branches).
+   */
   contacts: InvestorContact[];
 
   /**
@@ -51,20 +54,33 @@ export interface InvestorListingBase {
   ownership: Ownership;
 }
 
+/** At least one reachable person — required once investors can see the listing. */
+type InvestorVisibleContacts = [InvestorContact, ...InvestorContact[]];
+
 /**
  * Discriminated union: TypeScript uses `status` to know which shape you have.
  * `sold` is PREIshare’s closed deal — `closedAt` is required only then.
+ * Published / under-offer / sold also require financials and a non-empty contacts list
+ * (domain: unsafe to show investors without price or a person to call).
  */
 export type InvestorListing =
   | (InvestorListingBase & {
-      status: "draft" | "published" | "under_offer" | "archived";
+      status: "draft" | "archived";
       /** Not used unless the listing is sold/closed. */
       closedAt?: undefined;
+    })
+  | (InvestorListingBase & {
+      status: "published" | "under_offer";
+      closedAt?: undefined;
+      financialSummary: FinancialSummary;
+      contacts: InvestorVisibleContacts;
     })
   | (InvestorListingBase & {
       status: "sold";
       /** ISO-8601 datetime when the deal closed — required on sold listings. */
       closedAt: string;
+      financialSummary: FinancialSummary;
+      contacts: InvestorVisibleContacts;
     });
 
 /** Listing whose status is the closed-deal branch (`sold`). */

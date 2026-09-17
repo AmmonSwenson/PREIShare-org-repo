@@ -20,11 +20,12 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `.cursorrules` | Legacy Cursor rules; prefer `preishare.mdc` |
 | `docs/onboarding/` | Orientation notes and this map |
 | `docs/domain/` | Investor listing domain brief and field inventory (plain-language contract before later coding steps) |
+| `docs/type-safety/` | Expected type-error checklist for intentional invalid fixtures |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
 | `src/types/` | Shared investor-listing types (see `src/types/index.ts` barrel) |
-| `src/fixtures/` | Typed sample listings that must satisfy `InvestorListing` |
+| `src/fixtures/` | Valid sample listings plus `invalid-listings.errors.ts` (must fail typecheck) |
 | `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`) |
 | `src/components/` | `Header`, `Footer`, `ThemeToggle` |
 | `src/router.tsx` | Router factory |
