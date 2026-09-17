@@ -1,15 +1,17 @@
-/**
- * Core PREIshare investor listing — scalars plus closed status/category unions.
- * Nested types (address, financials, contacts, ownership) are added later.
- *
- * Field names follow docs/domain/listing-field-inventory.md.
- * `summary` is the inventory’s `description` (longer investor-facing copy).
- * `askingPrice` is the inventory’s `financials.askingPrice`, parked here as a
- * scalar until the nested financial summary type exists.
- */
+import type { Address } from "./address";
+import type { FinancialSummary } from "./financial-summary";
 import type { ListingStatus } from "./listing-status";
 import type { PropertyType } from "./property-type";
 
+/**
+ * Core PREIshare investor listing.
+ * Nested address is required so a map pin always has a location.
+ * Nested financials may be omitted on a draft while underwriting is incomplete.
+ *
+ * Field names follow docs/domain/listing-field-inventory.md.
+ * `summary` is the inventory’s `description`.
+ * `financialSummary` is the inventory’s `financials` group.
+ */
 export interface InvestorListing {
   /** Stable unique id for this listing (assigned by the system). */
   id: string;
@@ -20,17 +22,24 @@ export interface InvestorListing {
   /** Longer plain-text description of the investment opportunity. */
   summary: string;
 
-  /**
-   * Asking price in whole US dollars (no currency symbol).
-   * Example: 12500000 means $12,500,000.
-   */
-  askingPrice: number;
-
   /** Lifecycle state; only inventory-approved labels are allowed. */
   status: ListingStatus;
 
   /** Asset class; only inventory-approved labels are allowed. */
   propertyType: PropertyType;
+
+  /**
+   * Physical location. Required even when financials are still missing—
+   * a listing without a locateable address is unsafe to show investors.
+   */
+  address: Address;
+
+  /**
+   * Deal metrics. Optional as a whole object so drafts can exist before
+   * asking price and returns are underwritten. When present, askingPrice
+   * and currency inside FinancialSummary are required.
+   */
+  financialSummary?: FinancialSummary;
 
   /** ISO-8601 datetime string when the listing was first created. */
   createdAt: string;

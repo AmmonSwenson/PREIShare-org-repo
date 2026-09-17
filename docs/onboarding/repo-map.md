@@ -23,7 +23,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
-| `src/types/` | Shared investor-listing types (`investor-listing.ts`, `listing-status.ts`, `property-type.ts`; nested modules later) |
+| `src/types/` | Shared investor-listing types (`investor-listing.ts`, unions, `address.ts`, `financial-summary.ts`; contacts later) |
 | `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`) |
 | `src/components/` | `Header`, `Footer`, `ThemeToggle` |
 | `src/router.tsx` | Router factory |
