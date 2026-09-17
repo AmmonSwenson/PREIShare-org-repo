@@ -11,7 +11,7 @@ A PREIshare listing is a property opportunity an investor can review—not a blo
 - Domain type modules only (listing, address, status, contacts, ownership)
 - No UI components, no API route handlers, no database clients
 
-`investor-listing.ts` exports the core `InvestorListing` interface. Import public types from `index.ts` (the folder front door). Contacts are `InvestorContact[]` plus `primaryContactId`; ownership is a nested `Ownership` object.
+`InvestorListing` is a status-discriminated union on a shared base: `sold` requires `closedAt`; other statuses forbid a real close date. `id`, `createdAt`, and `updatedAt` are `readonly`. Import public types from `index.ts`.
 
 ## How to check types
 

@@ -1,32 +1,25 @@
 import type { Address } from "./address";
 import type { FinancialSummary } from "./financial-summary";
 import type { InvestorContact } from "./investor-contact";
-import type { ListingStatus } from "./listing-status";
 import type { Ownership } from "./ownership";
 import type { PropertyType } from "./property-type";
 
-/**
- * Core PREIshare investor listing.
- * Nested address is required so a map pin always has a location.
- * Nested financials may be omitted on a draft while underwriting is incomplete.
- * Contacts and ownership attach people so a listing is not an anonymous blob.
- *
- * Field names follow docs/domain/listing-field-inventory.md.
- * `summary` is the inventory’s `description`.
- * `financialSummary` is the inventory’s `financials` group.
- */
-export interface InvestorListing {
-  /** Stable unique id for this listing (assigned by the system). */
-  id: string;
+/** Fields every investor listing has, regardless of status. */
+export interface InvestorListingBase {
+  /** Stable identity — do not reassign after create. */
+  readonly id: string;
+
+  /** Set once when the row is created. */
+  readonly createdAt: string;
+
+  /** May change when the listing is edited; still not a business key. */
+  readonly updatedAt: string;
 
   /** Short public headline shown in search results and cards. */
   title: string;
 
   /** Longer plain-text description of the investment opportunity. */
   summary: string;
-
-  /** Lifecycle state; only inventory-approved labels are allowed. */
-  status: ListingStatus;
 
   /** Asset class; only inventory-approved labels are allowed. */
   propertyType: PropertyType;
@@ -56,10 +49,26 @@ export interface InvestorListing {
 
   /** Who owns the asset and how that ownership is described. */
   ownership: Ownership;
-
-  /** ISO-8601 datetime string when the listing was first created. */
-  createdAt: string;
-
-  /** ISO-8601 datetime string when the listing was last updated. */
-  updatedAt: string;
 }
+
+/**
+ * Discriminated union: TypeScript uses `status` to know which shape you have.
+ * `sold` is PREIshare’s closed deal — `closedAt` is required only then.
+ */
+export type InvestorListing =
+  | (InvestorListingBase & {
+      status: "draft" | "published" | "under_offer" | "archived";
+      /** Not used unless the listing is sold/closed. */
+      closedAt?: undefined;
+    })
+  | (InvestorListingBase & {
+      status: "sold";
+      /** ISO-8601 datetime when the deal closed — required on sold listings. */
+      closedAt: string;
+    });
+
+/** Listing whose status is the closed-deal branch (`sold`). */
+export type ClosedInvestorListing = Extract<InvestorListing, { status: "sold" }>;
+
+/** Listing that is not sold (draft, published, under offer, or archived). */
+export type OpenInvestorListing = Exclude<InvestorListing, { status: "sold" }>;
