@@ -24,6 +24,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
 | `src/types/` | Shared investor-listing types (see `src/types/index.ts` barrel) |
+| `src/fixtures/` | Typed sample listings that must satisfy `InvestorListing` |
 | `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`) |
 | `src/components/` | `Header`, `Footer`, `ThemeToggle` |
 | `src/router.tsx` | Router factory |
