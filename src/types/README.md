@@ -11,7 +11,7 @@ A PREIshare listing is a property opportunity an investor can review—not a blo
 - Domain type modules only (listing, address, status, contacts, ownership)
 - No UI components, no API route handlers, no database clients
 
-Do **not** add `investor-listing.ts` (or other listing models) in this scaffold step. Later steps own those files. This folder is tracked now so Git keeps the home they will live in.
+`investor-listing.ts` currently exports the **scalar** `InvestorListing` interface only. Nested address/financials/contacts and status/property-type unions are later steps.
 
 ## How to check types
 
