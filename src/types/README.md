@@ -11,7 +11,7 @@ A PREIshare listing is a property opportunity an investor can review—not a blo
 - Domain type modules only (listing, address, status, contacts, ownership)
 - No UI components, no API route handlers, no database clients
 
-`investor-listing.ts` exports the core `InvestorListing` interface. Status and property category are named string unions in `listing-status.ts` and `property-type.ts`. Location lives on required `address` (`address.ts`); deal metrics live on optional `financialSummary` (`financial-summary.ts`). Contacts and ownership come later.
+`investor-listing.ts` exports the core `InvestorListing` interface. Import public types from `index.ts` (the folder front door). Contacts are `InvestorContact[]` plus `primaryContactId`; ownership is a nested `Ownership` object.
 
 ## How to check types
 
