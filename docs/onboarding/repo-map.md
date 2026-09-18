@@ -20,7 +20,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `.cursorrules` | Legacy Cursor rules; prefer `preishare.mdc` |
 | `docs/onboarding/` | Orientation notes and this map |
 | `docs/domain/` | Investor listing domain brief and field inventory (plain-language contract before later coding steps) |
-| `docs/type-safety/` | Expected type-error checklist for intentional invalid fixtures |
+| `docs/type-safety/` | Expected type errors plus the pre-review verification checklist |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |

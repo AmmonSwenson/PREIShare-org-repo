@@ -13,15 +13,28 @@ A PREIshare listing is a property opportunity an investor can review—not a blo
 
 `InvestorListing` is a status-discriminated union on a shared base: `sold` requires `closedAt`; other statuses forbid a real close date. `id`, `createdAt`, and `updatedAt` are `readonly`. Import public types from `index.ts`.
 
-## How to check types
+## Typecheck
 
-From the project root after `npm install`:
+From the project root, after `npm install`, run:
 
 ```bash
 npm run typecheck
 ```
 
-That runs `tsc --noEmit`: TypeScript checks files under `src/` and reports errors without writing JavaScript output files.
+That is the team’s clean gate. It runs `tsc --noEmit`: TypeScript **checks types only** and does **not** write compiled JavaScript files.
+
+**What success looks like:** the command finishes with no type errors (exit code 0).
+
+What the clean gate covers:
+
+- Public types under `src/types/` (including `index.ts`)
+- Valid samples in `src/fixtures/sample-investor-listings.ts`
+
+What it does **not** require to pass:
+
+- `src/fixtures/invalid-listings.errors.ts` — intentional bad listings. `tsconfig.json` excludes this file so a misspelled status cannot fail the team gate. Those red errors are documented in `docs/type-safety/expected-type-errors.md`. Open the invalid file in the editor to see them; do not “fix” that file so it compiles.
+
+Before review, walk `docs/type-safety/verification-checklist.md`.
 
 ## Strict mode (plain language)
 
