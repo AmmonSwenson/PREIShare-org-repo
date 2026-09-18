@@ -22,6 +22,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `docs/type-safety/` | Expected type errors plus the pre-review verification checklist |
 | `docs/decisions/` | Architecture decision records (ADR-001: investor listing types) |
 | `docs/handoff/` | Sprint topic handoffs (Topic 1 types → next UI / schema / API work) |
+| `docs/investor-dashboard-brief.md` | Sprint 3 shell client brief (home, portfolio, deals, profile) |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
