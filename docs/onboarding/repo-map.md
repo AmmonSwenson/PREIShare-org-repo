@@ -15,12 +15,12 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | Path | What it is |
 | --- | --- |
 | `AGENTS.md` | Human and agent onboarding memory |
-| `CONTRIBUTORS.md` | Human list of people who have contributed |
 | `.cursor/rules/preishare.mdc` | Always-apply PREIshare agent rules |
 | `.cursorrules` | Legacy Cursor rules; prefer `preishare.mdc` |
 | `docs/onboarding/` | Orientation notes and this map |
 | `docs/domain/` | Investor listing domain brief and field inventory (plain-language contract before later coding steps) |
 | `docs/type-safety/` | Expected type errors plus the pre-review verification checklist |
+| `docs/decisions/` | Architecture decision records (ADR-001: investor listing types) |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
