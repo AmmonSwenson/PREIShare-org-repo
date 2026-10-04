@@ -23,6 +23,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `docs/decisions/` | Architecture decision records (ADR-001: investor listing types) |
 | `docs/handoff/` | Sprint topic handoffs (Topic 1 types → next UI / schema / API work) |
 | `docs/investor-dashboard-brief.md` | Sprint 3 shell client brief (home, portfolio, deals, profile) |
+| `docs/preishare-dashboard-requirements.md` | Beginner-readable requirements brief (actor, regions, must-have vs later, demo checks) |
 | `docs/dashboard-ia.md` | Dashboard information architecture (four `/dashboard` URLs) |
 | `docs/component-plan.md` | Dashboard component inventory (`AppShell`, widgets, must-NOT-do) |
 | `docs/verification-checklist.md` | Sprint 3 integration pass: shell vs brief/IA (pass / fail / deferred with evidence) |
