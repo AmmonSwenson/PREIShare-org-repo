@@ -45,7 +45,7 @@ Walkthrough method: HTTP GET of each investor URL plus a live browser pass (desk
 
 | ID | Check | Status | Evidence |
 |----|--------|--------|----------|
-| L1 | AppShell shows sidebar + header + main content on desktop | Pass | At ~1280px: left `aside.dash-sidebar` (PREIshare + four nav items), top `header.dash-header` (page title + “Sample investor (mock)”), `main.dash-content` to the right. Matches brief three-region chrome and `docs/component-plan.md`. |
+| L1 | AppShell shows sidebar + header + main content on desktop | Pass | At ~1280px: left `aside.dash-sidebar` (PREIshare + four nav items), top `header.dash-header` (page title + “Sample investor (mock)”), `main.dash-content` to the right. Re-check after CSS fix: hamburger is hidden on desktop (`display: none` on `.dash-header .dash-menu-toggle`); sidebar stays visible. Matches brief three-region chrome and `docs/component-plan.md`. |
 | L2 | Narrow viewport: nav remains usable (collapse, drawer, or stacked pattern) | Pass | At ~375×812: hamburger **Open navigation** (`aria-controls="dashboard-sidebar"`, `aria-expanded`) visible; sidebar collapsed (`max-height: 0` below 768px). Opening the menu showed Home / Portfolio / Deals / Profile plus close control; backdrop and Escape are wired in `AppShell`. Clicking Deals closed the menu after navigation. |
 | L3 | No permanent horizontal scroll on home/portfolio/deals/profile at ~375px width | Pass | Browser pass at ~375px on all four investor pages: content stacked; no permanent page-level horizontal scroll. Portfolio table sits in `.dash-table-wrap { overflow-x: auto }` so column overflow is intentional inside the card, not the whole page. |
 | L4 | Main content remains readable; cards/tables stack or scroll intentionally | Pass | Home stats use `.dash-card-grid` (1 column &lt;640px, 2 then 3 on larger breakpoints). Portfolio summary + recent activity stack on narrow view. Deals cards wrap. Profile `dl` is one column then two from `sm`. Type stays readable against `--sea-ink`. |
@@ -78,7 +78,9 @@ Walkthrough method: HTTP GET of each investor URL plus a live browser pass (desk
 
 ## 6. Defects found and resolution
 
-None — all in-scope checks passed on first walkthrough.
+| Defect | Severity (blocker / polish) | Resolution | Re-check |
+|--------|----------------------------|------------|----------|
+| Desktop (~1280px) still showed the hamburger beside the always-visible sidebar. `.dash-header button { display: inline-flex }` (specificity 0,1,1) overrode `.dash-menu-toggle { display: none }` (0,1,0). | polish | Raised hide/show rules to `.dash-header .dash-menu-toggle` in `src/styles/dashboard.css` so the toggle is `display: none` from 768px up and `inline-flex` below. | Pass (L1/L2 re-run after the CSS change) |
 
 **Polish notes (not fails):**
 

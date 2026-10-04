@@ -148,11 +148,15 @@
 }
 
 .dash-menu-toggle {
-  display: none;
   border: 1px solid var(--chip-line);
   border-radius: var(--dash-radius);
   background: var(--chip-bg);
   color: var(--sea-ink);
+}
+
+/* Beat `.dash-header button { display: inline-flex }` (0,1,1) so the toggle stays hidden on desktop. */
+.dash-header .dash-menu-toggle {
+  display: none;
 }
 
 .dash-sidebar-backdrop {
@@ -164,7 +168,7 @@
     flex-direction: column;
   }
 
-  .dash-menu-toggle {
+  .dash-header .dash-menu-toggle {
     display: inline-flex;
   }
 
