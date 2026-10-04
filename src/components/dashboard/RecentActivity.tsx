@@ -1,49 +1,54 @@
 export type ActivityItem = {
   id: string
-  title: string
-  detail: string
-  dateLabel: string
+  /** Already-formatted time label for display, e.g. "Mar 18 · 2:04 PM" */
+  whenLabel: string
+  description: string
+  category?: string | undefined
 }
 
 export type RecentActivityProps = {
   title?: string | undefined
-  items?: ActivityItem[] | undefined
+  items: ActivityItem[]
+  /** Shown when items is empty */
+  emptyMessage?: string | undefined
+  /** When true, show a “not a live feed” caption */
   isSampleData?: boolean | undefined
 }
 
-const DEFAULT_MOCK_ACTIVITY: ActivityItem[] = [
+/** MOCK PLACEHOLDER — replace with real activity feed later */
+export const MOCK_RECENT_ACTIVITY: ActivityItem[] = [
   {
     id: 'a1',
-    title: 'Viewed a deal (sample)',
-    detail: 'Riverfront Multifamily — 24 Units · published',
-    dateLabel: 'Mar 15, 2026',
+    whenLabel: 'Mar 18 · 2:04 PM',
+    description: 'Distribution posted for Riverfront Multifamily',
+    category: 'Distribution',
   },
   {
     id: 'a2',
-    title: 'Open deal still under offer (sample)',
-    detail: 'Cedar Industrial — asking price placeholder',
-    dateLabel: 'Mar 12, 2026',
+    whenLabel: 'Mar 17 · 11:20 AM',
+    description: 'Quarterly report available for Cedar Retail Plaza',
+    category: 'Document',
   },
   {
     id: 'a3',
-    title: 'Distribution posted (sample)',
-    detail: 'Sample multifamily holding',
-    dateLabel: 'Mar 1, 2026',
-  },
-  {
-    id: 'a4',
-    title: 'Profile details reviewed (sample)',
-    detail: 'Contact placeholders only',
-    dateLabel: 'Feb 20, 2026',
+    whenLabel: 'Mar 15 · 9:00 AM',
+    description: 'Capital call reminder — Harbor Industrial',
+    category: 'Notice',
   },
 ]
 
-/** Short mock event list for the home overview — not a live audit log. */
+/**
+ * Presentational activity list. Parents pass items; this file does not
+ * fetch, subscribe, or navigate.
+ */
 export function RecentActivity({
   title = 'Recent activity',
-  items = DEFAULT_MOCK_ACTIVITY,
-  isSampleData = true,
+  items,
+  emptyMessage = 'No recent activity yet.',
+  isSampleData = false,
 }: RecentActivityProps) {
+  const isEmpty = items.length === 0
+
   return (
     <section
       className="island-shell rounded-2xl p-5 sm:p-6"
@@ -65,20 +70,30 @@ export function RecentActivity({
           </p>
         ) : null}
       </div>
-      <ol className="m-0 list-none space-y-4 p-0">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="flex flex-wrap items-start justify-between gap-2 border-t border-[var(--line)] pt-4 first:border-t-0 first:pt-0"
-          >
-            <div>
-              <p className="m-0 font-medium text-[var(--sea-ink)]">{item.title}</p>
-              <p className="mt-1 mb-0 text-sm text-[var(--sea-ink-soft)]">{item.detail}</p>
-            </div>
-            <time className="text-sm text-[var(--sea-ink-soft)]">{item.dateLabel}</time>
-          </li>
-        ))}
-      </ol>
+      {isEmpty ? (
+        <p className="m-0 text-sm text-[var(--sea-ink-soft)]">{emptyMessage}</p>
+      ) : (
+        <ul className="m-0 list-none space-y-3 p-0">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className="border-l-2 border-[var(--line)] pl-3"
+            >
+              <p className="m-0 text-xs text-[var(--sea-ink-soft)]">
+                {item.whenLabel}
+              </p>
+              <p className="mt-1 mb-0 text-sm font-medium text-[var(--sea-ink)]">
+                {item.description}
+              </p>
+              {item.category ? (
+                <p className="mt-1 mb-0 text-xs text-[var(--sea-ink-soft)]">
+                  {item.category}
+                </p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }

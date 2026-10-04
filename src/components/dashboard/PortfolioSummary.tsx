@@ -1,45 +1,42 @@
-export type HoldingSnapshot = {
+export type PortfolioHolding = {
   id: string
   name: string
+  /** Display string already formatted for UI, e.g. "$120,000" or "18%" */
   allocationLabel: string
-  valueLabel: string
 }
 
 export type PortfolioSummaryProps = {
+  /** Section heading (architecture: headline) */
   title?: string | undefined
-  totalLabel: string
-  holdings?: HoldingSnapshot[] | undefined
+  holdings: PortfolioHolding[]
+  /** Optional total line for the snapshot */
+  totalLabel?: string | undefined
+  /** Shown when holdings is empty */
+  emptyMessage?: string | undefined
+  /** When true, show a “not live balances” caption */
   isSampleData?: boolean | undefined
 }
 
-const DEFAULT_MOCK_HOLDINGS: HoldingSnapshot[] = [
-  {
-    id: 'h1',
-    name: 'Riverfront Multifamily — 24 Units (sample)',
-    allocationLabel: '40%',
-    valueLabel: '$120,000',
-  },
-  {
-    id: 'h2',
-    name: 'Cedar Industrial — Under Offer (sample)',
-    allocationLabel: '35%',
-    valueLabel: '$105,000',
-  },
-  {
-    id: 'h3',
-    name: 'Cash reserve (sample)',
-    allocationLabel: '25%',
-    valueLabel: '$75,000',
-  },
+/** MOCK PLACEHOLDER — replace with real portfolio data in a later sprint */
+export const MOCK_PORTFOLIO_HOLDINGS: PortfolioHolding[] = [
+  { id: 'h1', name: 'Riverfront Multifamily', allocationLabel: '42%' },
+  { id: 'h2', name: 'Cedar Retail Plaza', allocationLabel: '33%' },
+  { id: 'h3', name: 'Harbor Industrial', allocationLabel: '25%' },
 ]
 
-/** Compact holdings snapshot for the home overview — not the full Portfolio table. */
+/**
+ * Presentational holdings snapshot. Parents pass the list; this file does
+ * not fetch or edit portfolio data.
+ */
 export function PortfolioSummary({
   title = 'Portfolio summary',
+  holdings,
   totalLabel,
-  holdings = DEFAULT_MOCK_HOLDINGS,
-  isSampleData = true,
+  emptyMessage = 'No holdings to show yet.',
+  isSampleData = false,
 }: PortfolioSummaryProps) {
+  const isEmpty = holdings.length === 0
+
   return (
     <section
       className="island-shell rounded-2xl p-5 sm:p-6"
@@ -61,24 +58,26 @@ export function PortfolioSummary({
           </p>
         ) : null}
       </div>
-      <p className="mb-4 flex flex-wrap items-baseline justify-between gap-2 text-[var(--sea-ink)]">
-        <span className="text-sm font-semibold uppercase tracking-wide text-[var(--kicker)]">
-          Total (sample)
-        </span>
-        <span className="text-xl font-semibold tracking-tight">{totalLabel}</span>
-      </p>
-      <ul className="m-0 list-none space-y-3 p-0">
-        {holdings.map((item) => (
-          <li
-            key={item.id}
-            className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] pt-3 text-sm first:border-t-0 first:pt-0"
-          >
-            <span className="font-medium text-[var(--sea-ink)]">{item.name}</span>
-            <span className="text-[var(--sea-ink-soft)]">{item.allocationLabel}</span>
-            <span className="font-semibold text-[var(--sea-ink)]">{item.valueLabel}</span>
-          </li>
-        ))}
-      </ul>
+      {totalLabel ? (
+        <p className="mb-4 mt-0 text-sm text-[var(--sea-ink-soft)]">
+          Total: {totalLabel}
+        </p>
+      ) : null}
+      {isEmpty ? (
+        <p className="m-0 text-sm text-[var(--sea-ink-soft)]">{emptyMessage}</p>
+      ) : (
+        <ul className="m-0 list-none divide-y divide-[var(--line)] p-0">
+          {holdings.map((item) => (
+            <li
+              key={item.id}
+              className="flex items-center justify-between gap-2 py-2 text-sm first:pt-0 last:pb-0"
+            >
+              <span className="font-medium text-[var(--sea-ink)]">{item.name}</span>
+              <span className="text-[var(--sea-ink-soft)]">{item.allocationLabel}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }
