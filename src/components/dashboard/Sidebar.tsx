@@ -18,7 +18,7 @@ export function Sidebar() {
               <Link
                 to={item.path}
                 activeOptions={{ exact: item.path === '/dashboard' }}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--lagoon-deep)] no-underline hover:bg-[var(--link-bg-hover)] [&.active]:bg-[var(--chip-bg)] [&.active]:font-semibold [&.active]:text-[var(--sea-ink)]"
+                className="block min-h-11 rounded-lg px-3 py-2 text-sm font-medium leading-6 text-[var(--lagoon-deep)] no-underline hover:bg-[var(--link-bg-hover)] [&.active]:bg-[var(--chip-bg)] [&.active]:font-semibold [&.active]:text-[var(--sea-ink)]"
               >
                 {item.label}
               </Link>

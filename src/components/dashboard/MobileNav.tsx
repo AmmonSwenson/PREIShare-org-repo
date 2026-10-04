@@ -12,7 +12,7 @@ export function MobileNav() {
     <div className="border-b border-[var(--line)] px-4 py-2 md:hidden">
       <button
         type="button"
-        className="rounded-lg border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-2 text-sm font-medium text-[var(--sea-ink)]"
+        className="min-h-11 rounded-lg border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-2 text-sm font-medium text-[var(--sea-ink)]"
         aria-expanded={open}
         aria-controls="mobile-dashboard-menu"
         onClick={() => setOpen((value) => !value)}
@@ -31,7 +31,7 @@ export function MobileNav() {
                 <Link
                   to={item.path}
                   activeOptions={{ exact: item.path === '/dashboard' }}
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--lagoon-deep)] no-underline hover:bg-[var(--link-bg-hover)]"
+                  className="block min-h-11 rounded-lg px-3 py-2 text-sm font-medium leading-6 text-[var(--lagoon-deep)] no-underline hover:bg-[var(--link-bg-hover)]"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
