@@ -25,6 +25,7 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `docs/investor-dashboard-brief.md` | Sprint 3 shell client brief (home, portfolio, deals, profile) |
 | `docs/dashboard-ia.md` | Dashboard information architecture (four `/dashboard` URLs) |
 | `docs/component-plan.md` | Dashboard component inventory (`AppShell`, widgets, must-NOT-do) |
+| `docs/verification-checklist.md` | Sprint 3 integration pass: shell vs brief/IA (pass / fail / deferred with evidence) |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
