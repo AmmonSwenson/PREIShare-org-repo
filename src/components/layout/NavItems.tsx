@@ -16,7 +16,7 @@ export function NavItems() {
   const current = normalizePathname(pathname)
 
   return (
-    <nav aria-label="Dashboard">
+    <nav className="dash-nav" aria-label="Dashboard">
       <ul className="nav-list m-0 flex list-none flex-wrap gap-2 p-0 text-sm sm:flex-col">
         {dashboardNavItems.map((item) => {
           const homeExact = item.path === '/dashboard'

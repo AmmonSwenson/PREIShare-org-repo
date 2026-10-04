@@ -16,7 +16,7 @@ function DashboardHomePage() {
       >
         Demo shell — all figures are placeholders
       </p>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="dash-card-grid">
         <StatsCard
           label="Total portfolio value"
           value="$300,000"
@@ -33,7 +33,7 @@ function DashboardHomePage() {
           hint="Sample YTD"
         />
       </div>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="dash-card-grid dash-card-grid--two">
         <PortfolioSummary totalLabel="$300,000" />
         <RecentActivity />
       </div>
