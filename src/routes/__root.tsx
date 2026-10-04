@@ -70,7 +70,7 @@ function RootDocument({ children }: { children: ReactNode }) {
   )
 }
 
-/** Marketing chrome stays on `/` and `/about`; dashboard uses AppShell. */
+/** Marketing chrome stays on `/` and `/about`; dashboard layout owns its own chrome. */
 function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   if (pathname.startsWith('/dashboard')) {

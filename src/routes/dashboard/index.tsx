@@ -1,42 +1,22 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PortfolioSummary } from '../../components/dashboard/PortfolioSummary'
-import { RecentActivity } from '../../components/dashboard/RecentActivity'
-import { StatsCard } from '../../components/dashboard/StatsCard'
 
 export const Route = createFileRoute('/dashboard/')({
-  component: DashboardHomePage,
+  component: DashboardHome,
 })
 
-function DashboardHomePage() {
+function DashboardHome() {
   return (
-    <div className="flex flex-col gap-6">
-      <p
-        className="m-0 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm font-semibold text-[var(--sea-ink-soft)]"
-        role="note"
+    <section aria-labelledby="dashboard-home-heading">
+      <h2
+        id="dashboard-home-heading"
+        className="text-xl font-semibold text-[var(--sea-ink)]"
       >
-        Demo shell — all figures are placeholders
+        Welcome back
+      </h2>
+      <p className="mt-2 max-w-prose text-[var(--sea-ink-soft)]">
+        Portfolio metrics and recent activity will appear here. This placeholder
+        confirms the /dashboard route tree is wired correctly.
       </p>
-      <div className="dash-card-grid">
-        <StatsCard
-          label="Total portfolio value"
-          value="$300,000"
-          hint="Sample total"
-        />
-        <StatsCard
-          label="Open deals"
-          value="3"
-          hint="Sample count · published / under_offer"
-        />
-        <StatsCard
-          label="Contributions YTD"
-          value="$24,000"
-          hint="Sample YTD"
-        />
-      </div>
-      <div className="dash-card-grid dash-card-grid--two">
-        <PortfolioSummary totalLabel="$300,000" />
-        <RecentActivity />
-      </div>
-    </div>
+    </section>
   )
 }
