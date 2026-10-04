@@ -6,9 +6,13 @@ export const Route = createFileRoute('/dashboard/')({
 
 function DashboardHomePage() {
   return (
-    <main>
-      <h1>Dashboard overview</h1>
-      <p>Placeholder for portfolio value, open deals, and recent activity.</p>
-    </main>
+    <section>
+      <h2 className="mt-0 text-lg font-semibold text-[var(--sea-ink)]">
+        Dashboard overview
+      </h2>
+      <p className="text-[var(--sea-ink-soft)]">
+        Placeholder for portfolio value, open deals, and recent activity.
+      </p>
+    </section>
   )
 }

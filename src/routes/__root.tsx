@@ -1,8 +1,10 @@
+import type { ReactNode } from 'react'
 import {
   HeadContent,
   Outlet,
   Scripts,
   createRootRoute,
+  useRouterState,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -42,7 +44,7 @@ function RootLayout() {
   return <Outlet />
 }
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -50,9 +52,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-        <Header />
-        {children}
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
@@ -67,5 +67,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+  )
+}
+
+/** Marketing chrome stays on `/` and `/about`; dashboard uses AppShell. */
+function SiteChrome({ children }: { children: ReactNode }) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  if (pathname.startsWith('/dashboard')) {
+    return children
+  }
+
+  return (
+    <>
+      <Header />
+      {children}
+      <Footer />
+    </>
   )
 }

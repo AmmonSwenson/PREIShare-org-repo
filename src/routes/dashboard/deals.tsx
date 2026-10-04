@@ -6,9 +6,11 @@ export const Route = createFileRoute('/dashboard/deals')({
 
 function DealsPage() {
   return (
-    <main>
-      <h1>Deals</h1>
-      <p>Placeholder for open and past investment deals.</p>
-    </main>
+    <section>
+      <h2 className="mt-0 text-lg font-semibold text-[var(--sea-ink)]">Deals</h2>
+      <p className="text-[var(--sea-ink-soft)]">
+        Placeholder for open and past investment deals.
+      </p>
+    </section>
   )
 }
