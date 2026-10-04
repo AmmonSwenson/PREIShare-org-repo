@@ -26,13 +26,15 @@ Verified against this tree. Do not invent packages, scripts, or folders that are
 | `docs/dashboard-ia.md` | Dashboard information architecture (four `/dashboard` URLs) |
 | `docs/component-plan.md` | Dashboard component inventory (`AppShell`, widgets, must-NOT-do) |
 | `docs/verification-checklist.md` | Sprint 3 integration pass: shell vs brief/IA (pass / fail / deferred with evidence) |
+| `docs/sprint3-handoff.md` | Sprint 3 stakeholder handoff (what shipped, how to run, mock limits, next sprint) |
+| `docs/architecture-decisions.md` | Sprint 3 shell ADRs (routing, AppShell, nav, mock data, a11y) + next-sprint foundations |
 | `README.md` | Human getting-started guide |
 | `package.json` | Root package (`preishare-org-repo`) and scripts |
 | `src/` | TanStack Start / React application |
 | `src/types/` | Shared investor-listing types (see `src/types/index.ts` barrel) |
 | `src/fixtures/` | Valid sample listings plus `invalid-listings.errors.ts` (must fail typecheck) |
-| `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`) |
-| `src/components/` | `Header`, `Footer`, `ThemeToggle` |
+| `src/routes/` | File routes (`__root.tsx`, `index.tsx`, `about.tsx`, `dashboard.tsx` + `dashboard/*`) |
+| `src/components/` | Marketing `Header`/`Footer`/`ThemeToggle`; dashboard layout and widgets under `layout/` and `dashboard/` |
 | `src/router.tsx` | Router factory |
 | `src/routeTree.gen.ts` | Generated route tree — do not edit by hand |
 | `src/styles.css` | Tailwind entry |
