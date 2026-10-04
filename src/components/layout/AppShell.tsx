@@ -3,18 +3,16 @@ import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 
 type AppShellProps = {
-  title?: string
+  title?: string | undefined
   children: ReactNode
 }
 
 /**
  * Shared investor chrome: sidebar + header + main content region.
  * Child routes render inside `children` (wired from the dashboard layout route).
+ * Header title comes from navConfig unless `title` is passed in.
  */
-export function AppShell({
-  title = 'Investor Dashboard',
-  children,
-}: AppShellProps) {
+export function AppShell({ title, children }: AppShellProps) {
   return (
     <div
       className="app-shell flex min-h-screen flex-col bg-[var(--bg-base)] text-[var(--sea-ink)] sm:flex-row"
