@@ -111,7 +111,7 @@ function SignUpPage() {
 
       <p className="mt-6 mb-0 text-sm text-[var(--sea-ink-soft)]">
         Already registered?{' '}
-        <Link to="/auth/login" className="font-semibold text-[var(--lagoon-deep)]">
+        <Link to="/login" className="font-semibold text-[var(--lagoon-deep)]">
           Sign in
         </Link>
       </p>
