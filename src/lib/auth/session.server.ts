@@ -36,7 +36,12 @@ function toSponsorUser(id: string, email: string | undefined): SponsorUser {
   return { id, email: email ?? null }
 }
 
-export async function readSponsorSession(): Promise<SponsorSession | null> {
+export type SponsorAuth = {
+  user: SponsorUser
+  accessToken: string
+}
+
+export async function readSponsorAuth(): Promise<SponsorAuth | null> {
   const accessToken = getCookie(ACCESS_COOKIE)
   const refreshToken = getCookie(REFRESH_COOKIE)
 
@@ -49,7 +54,10 @@ export async function readSponsorSession(): Promise<SponsorSession | null> {
   if (accessToken) {
     const { data, error } = await supabase.auth.getUser(accessToken)
     if (!error && data.user) {
-      return { user: toSponsorUser(data.user.id, data.user.email) }
+      return {
+        user: toSponsorUser(data.user.id, data.user.email),
+        accessToken,
+      }
     }
   }
 
@@ -70,7 +78,13 @@ export async function readSponsorSession(): Promise<SponsorSession | null> {
   writeSessionCookies(nextSession.access_token, nextSession.refresh_token)
   return {
     user: toSponsorUser(nextSession.user.id, nextSession.user.email),
+    accessToken: nextSession.access_token,
   }
+}
+
+export async function readSponsorSession(): Promise<SponsorSession | null> {
+  const auth = await readSponsorAuth()
+  return auth ? { user: auth.user } : null
 }
 
 export async function persistSponsorSession(tokens: {

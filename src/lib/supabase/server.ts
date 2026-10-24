@@ -37,3 +37,38 @@ export function createServerSupabaseClient(): SupabaseClient<Database> {
     },
   })
 }
+
+/**
+ * User-scoped server client for sponsor listing CRUD.
+ * Uses the anon/publishable key plus the signed-in user's JWT so RLS applies.
+ * Never pass the service-role key here.
+ */
+export function createUserServerSupabaseClient(
+  accessToken: string,
+): SupabaseClient<Database> {
+  const url = readServerEnv('SUPABASE_URL') ?? readServerEnv('VITE_SUPABASE_URL')
+  const anonKey =
+    readServerEnv('SUPABASE_ANON_KEY') ?? readServerEnv('VITE_SUPABASE_ANON_KEY')
+
+  if (!url || !anonKey) {
+    throw new Error(
+      'Missing SUPABASE_URL (or VITE_SUPABASE_URL) or SUPABASE_ANON_KEY (or VITE_SUPABASE_ANON_KEY). See docs/setup/supabase-env-checklist.md',
+    )
+  }
+
+  if (accessToken.length === 0) {
+    throw new Error('Missing user access token for RLS-scoped Supabase client.')
+  }
+
+  return createClient<Database>(url, anonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  })
+}
