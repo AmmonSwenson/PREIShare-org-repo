@@ -1,4 +1,4 @@
-import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
+import { Link, createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 
 export type PropertyListItem = {
@@ -123,14 +123,22 @@ function PropertiesPage() {
 
   return (
     <section className="space-y-4">
-      <header className="space-y-1">
-        <h1 className="m-0 text-2xl font-semibold text-[var(--sea-ink)]">
-          Your properties
-        </h1>
-        <p className="m-0 text-sm text-[var(--sea-ink-soft)]">
-          Listings you are allowed to manage. Visibility is enforced by the
-          database (RLS), not only by this page.
-        </p>
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="m-0 text-2xl font-semibold text-[var(--sea-ink)]">
+            Your properties
+          </h1>
+          <p className="m-0 text-sm text-[var(--sea-ink-soft)]">
+            Listings you are allowed to manage. Visibility is enforced by the
+            database (RLS), not only by this page.
+          </p>
+        </div>
+        <Link
+          to="/dashboard/properties/new"
+          className="inline-flex min-h-11 items-center rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline"
+        >
+          Add property
+        </Link>
       </header>
 
       {error ? (
@@ -148,6 +156,14 @@ function PropertiesPage() {
           <p className="mt-1 mb-0 text-sm">
             When you add a listing, it will show up here for your sponsor
             account only.
+          </p>
+          <p className="mt-4 mb-0">
+            <Link
+              to="/dashboard/properties/new"
+              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline"
+            >
+              Add property
+            </Link>
           </p>
         </div>
       ) : null}
