@@ -4,6 +4,7 @@
  */
 export type DashboardNavPath =
   | '/dashboard'
+  | '/dashboard/listings'
   | '/dashboard/portfolio'
   | '/dashboard/deals'
   | '/dashboard/profile'
@@ -19,6 +20,11 @@ export const dashboardNavItems: readonly NavItemConfig[] = [
     label: 'Home',
     path: '/dashboard',
     title: 'Dashboard overview',
+  },
+  {
+    label: 'Listings',
+    path: '/dashboard/listings',
+    title: 'Your property listings',
   },
   {
     label: 'Portfolio',
