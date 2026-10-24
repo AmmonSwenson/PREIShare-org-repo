@@ -1,22 +1,15 @@
 /**
  * Server-only sponsor session helpers.
  *
- * Import these from loaders, `beforeLoad`, and `createServerFn` callers.
- * Do not import `src/lib/supabase/server.ts` from React UI — this module
- * already wraps that client in `createServerFn` handlers so the service-role
- * key stays on the server.
+ * Import these from loaders, `beforeLoad`, and event handlers.
+ * Cookie reads and `src/lib/supabase/server.ts` stay behind `createServerFn`
+ * so the service-role key is not imported by login/signup UI.
  *
  * Tokens live in HttpOnly cookies. `getSession` / `getUser` return the
  * sponsor identity only — never access or refresh tokens — so route context
  * cannot leak JWTs into the browser payload.
  */
 import { createServerFn } from '@tanstack/react-start'
-import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
-import { createServerSupabaseClient } from '../supabase/server'
-
-const ACCESS_COOKIE = 'preishare-access-token'
-const REFRESH_COOKIE = 'preishare-refresh-token'
-const WEEK_SECONDS = 60 * 60 * 24 * 7
 
 export type SponsorUser = {
   id: string
@@ -25,69 +18,6 @@ export type SponsorUser = {
 
 export type SponsorSession = {
   user: SponsorUser
-}
-
-function cookieOptions() {
-  return {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    path: '/',
-    maxAge: WEEK_SECONDS,
-  }
-}
-
-function writeSessionCookies(accessToken: string, refreshToken: string) {
-  const options = cookieOptions()
-  setCookie(ACCESS_COOKIE, accessToken, options)
-  setCookie(REFRESH_COOKIE, refreshToken, options)
-}
-
-function clearSessionCookies() {
-  const options = { path: '/' }
-  deleteCookie(ACCESS_COOKIE, options)
-  deleteCookie(REFRESH_COOKIE, options)
-}
-
-function toSponsorUser(id: string, email: string | undefined): SponsorUser {
-  return { id, email: email ?? null }
-}
-
-async function readSponsorSession(): Promise<SponsorSession | null> {
-  const accessToken = getCookie(ACCESS_COOKIE)
-  const refreshToken = getCookie(REFRESH_COOKIE)
-
-  if (!accessToken && !refreshToken) {
-    return null
-  }
-
-  const supabase = createServerSupabaseClient()
-
-  if (accessToken) {
-    const { data, error } = await supabase.auth.getUser(accessToken)
-    if (!error && data.user) {
-      return { user: toSponsorUser(data.user.id, data.user.email) }
-    }
-  }
-
-  if (!refreshToken) {
-    clearSessionCookies()
-    return null
-  }
-
-  const refreshed = await supabase.auth.refreshSession({
-    refresh_token: refreshToken,
-  })
-  const nextSession = refreshed.data.session
-  if (refreshed.error || !nextSession) {
-    clearSessionCookies()
-    return null
-  }
-
-  writeSessionCookies(nextSession.access_token, nextSession.refresh_token)
-  return {
-    user: toSponsorUser(nextSession.user.id, nextSession.user.email),
-  }
 }
 
 function parseSessionTokens(data: unknown): {
@@ -115,40 +45,27 @@ function parseSessionTokens(data: unknown): {
 export const persistSession = createServerFn({ method: 'POST' })
   .validator(parseSessionTokens)
   .handler(async ({ data }) => {
-    const supabase = createServerSupabaseClient()
-    const { data: userData, error } = await supabase.auth.getUser(
-      data.accessToken,
-    )
-    if (error || !userData.user) {
-      throw new Error('Could not verify this session. Sign in again.')
-    }
-    writeSessionCookies(data.accessToken, data.refreshToken)
-    return { user: toSponsorUser(userData.user.id, userData.user.email) }
+    const { persistSponsorSession } = await import('./session.server')
+    return persistSponsorSession(data)
   })
 
 export const getSession = createServerFn({ method: 'GET' }).handler(
   async (): Promise<SponsorSession | null> => {
+    const { readSponsorSession } = await import('./session.server')
     return readSponsorSession()
   },
 )
 
 export const getUser = createServerFn({ method: 'GET' }).handler(
   async (): Promise<SponsorUser | null> => {
+    const { readSponsorSession } = await import('./session.server')
     const session = await readSponsorSession()
     return session?.user ?? null
   },
 )
 
 export const signOut = createServerFn({ method: 'POST' }).handler(async () => {
-  const accessToken = getCookie(ACCESS_COOKIE)
-  if (accessToken) {
-    try {
-      const supabase = createServerSupabaseClient()
-      await supabase.auth.admin.signOut(accessToken, 'global')
-    } catch {
-      // Cookie clear below still ends the app session even if revoke fails.
-    }
-  }
-  clearSessionCookies()
+  const { revokeSponsorSession } = await import('./session.server')
+  await revokeSponsorSession()
   return { ok: true as const }
 })
