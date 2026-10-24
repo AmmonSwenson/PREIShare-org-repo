@@ -9,15 +9,25 @@ export type AppShellProps = {
   title?: string | undefined
   /** Optional sidebar slot — defaults to the dashboard Sidebar */
   sidebar?: ReactNode | undefined
+  /** Optional header actions (sign out, etc.) */
+  actions?: ReactNode | undefined
+  /** Signed-in label shown in the header chip */
+  userLabel?: string | undefined
 }
 
 /**
  * Shared frame for all /dashboard routes: header, sidebar/mobile nav, main slot.
  */
-export function AppShell({ children, title, sidebar }: AppShellProps) {
+export function AppShell({
+  children,
+  title,
+  sidebar,
+  actions,
+  userLabel,
+}: AppShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg-base)] text-[var(--sea-ink)]">
-      <Header title={title} />
+      <Header title={title} actions={actions} userLabel={userLabel} />
       <MobileNav />
 
       <div className="flex min-h-0 flex-1">

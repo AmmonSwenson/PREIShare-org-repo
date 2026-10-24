@@ -5,13 +5,13 @@ export type HeaderProps = {
   title?: string | undefined
   /** Optional right-side actions (keep empty for now if unused) */
   actions?: ReactNode | undefined
-  /** Presentational demo label only — not a real session */
+  /** Signed-in sponsor label */
   userLabel?: string | undefined
 }
 
 /**
  * Top chrome for the PREIshare investor dashboard.
- * Shows branding + a demo user placeholder only — not real auth state.
+ * Shows branding plus the signed-in sponsor label.
  */
 export function Header({
   title = 'Dashboard',
@@ -39,7 +39,7 @@ export function Header({
         {actions}
         <div
           className="flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-2 py-1"
-          aria-label="Signed-in user placeholder"
+          aria-label="Signed-in user"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--chip-bg)] text-xs font-medium text-[var(--sea-ink)]">
             IN
