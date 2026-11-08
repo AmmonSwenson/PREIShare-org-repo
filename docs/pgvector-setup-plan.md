@@ -16,18 +16,18 @@ Copied from `docs/embedding-data-model.md` — do not invent new names or a seco
 | --- | --- |
 | Table | `public.properties` |
 | Embedding column | `embedding` |
-| Embedding type | `vector(DIMENSION_TODO)` |
-| Dimension | **DIMENSION_TODO** (not chosen yet; **not** 1536) |
+| Embedding type | `vector(1536)` |
+| Dimension | **1536** (locked with the data model and migration) |
 | Other listing columns | Already present: `id`, `owner_id`, `title`, `description`, `city`, `status`, `created_at`, `updated_at` |
 | Embedding input recipe | `{title}` + blank line + `{description}` (generation later; not this migration) |
 | Distance / ranking style for demo | Cosine-style closeness (see Similarity approach) |
 
-**Do not** silently change the table name, the column name `embedding`, or **DIMENSION_TODO**. If SQL requires a numeric dimension, replace **DIMENSION_TODO** in the **data model, this plan, and the migration in one pass**—never pick a size only in SQL.
+**Do not** silently change the table name, the column name `embedding`, or **1536**. If the size must change, update the **data model, this plan, and the migration in one pass**—never pick a size only in SQL.
 
 ## Migration goals (what “done” means)
 
 1. pgvector extension is available in the database (`vector`).
-2. `public.properties` still has the listing fields from the data model, plus a non-lossy `embedding vector(DIMENSION_TODO)` column. Existing text columns stay; we do not replace `description` with a vector.
+2. `public.properties` still has the listing fields from the data model, plus a non-lossy `embedding vector(1536)` column. Existing text columns stay; we do not replace `description` with a vector.
 3. It is valid for `embedding` to be **null** until a backfill/seed job runs (insert-then-embed lifecycle).
 4. A beginner demo can run a similarity query **later** (a `match_properties` function is a **follow-up**, out of scope for this migration).
 5. Verification queries prove: extension on, vector column shape, nulls allowed, chosen distance operator works on two literal vectors.
@@ -37,7 +37,7 @@ Copied from `docs/embedding-data-model.md` — do not invent new names or a seco
 | Order | Step | Why this order |
 |------:|------|----------------|
 | 1 | Enable extension `vector` (pgvector) | Vector column types and operators (`<=>` and friends) do not exist until the extension is on. Creating `embedding` first **fails**. |
-| 2 | **Alter** `public.properties`: add `embedding vector(DIMENSION_TODO)` nullable. Do **not** `CREATE TABLE properties` if the table already exists. Do **not** add `price`, photos, or a second embedding column. | Column type `vector(...)` depends on step 1. Listing fields already exist from sponsor auth. |
+| 2 | **Alter** `public.properties`: add `embedding vector(1536)` nullable. Do **not** `CREATE TABLE properties` if the table already exists. Do **not** add `price`, photos, or a second embedding column. | Column type `vector(...)` depends on step 1. Listing fields already exist from sponsor auth. |
 | 3 | Vector index | **Out of scope for this demo migration.** Indexes are not required to store vectors. Add only after the column exists, and only when sample size grows. Tiny seed set: sequential scan is enough. |
 | 4 | Run verification SQL in the Supabase SQL editor | Confirms schema before any seed, TypeScript helper, or search route. |
 
@@ -60,7 +60,7 @@ If later search SQL uses `1 - (embedding <=> query)` as similarity, document tha
 
 - **Demo scale (tens of rows):** **No index required** for the sample seed. Sequential scan is OK and easier to explain.
 - **This migration:** step 3 is **out of scope**. Do not add IVFFlat/HNSW “for production” in the first SQL file.
-- **If a later change adds an index:** create it only after `embedding` exists; most rows should be non-null first; operator class must match cosine / `<=>` and **DIMENSION_TODO**.
+- **If a later change adds an index:** create it only after `embedding` exists; most rows should be non-null first; operator class must match cosine / `<=>` and **1536**.
 
 ## Environment values (high level—no secrets in this file)
 
@@ -78,12 +78,12 @@ Enabling the extension does not need an embedding vendor. Do not block the migra
 
 ## Verification queries (run after migration)
 
-Intents a human can run in the Supabase SQL editor. Exact SQL may be tightened in the migration step; sketches below must keep table `properties`, column `embedding`, and **DIMENSION_TODO**.
+Intents a human can run in the Supabase SQL editor. Exact SQL may be tightened in the migration step; sketches below must keep table `properties`, column `embedding`, and **1536**.
 
 1. **Extension installed:** `vector` appears in `pg_extension`.
-2. **Column shape:** `properties.embedding` is a `vector` with the planned **DIMENSION_TODO** (confirm via catalog / `\d` / `information_schema` plus `atttypmod` or equivalent—not a guess). Listing columns `title` and `description` still exist as text.
+2. **Column shape:** `properties.embedding` is a `vector` with the planned **1536** (confirm via catalog / `\d` / `information_schema` plus `atttypmod` or equivalent—not a guess). Listing columns `title` and `description` still exist as text.
 3. **Nulls allowed:** insert or select a row with `embedding` IS NULL to prove the temporary insert-then-embed state is legal. Do not require a real model output in this check.
-4. **Operator smoke test (optional):** compare two **literal** vectors of the **same** DIMENSION_TODO with `<=>` so we know cosine distance works. Do not mix lengths.
+4. **Operator smoke test (optional):** compare two **literal** vectors of the **same** 1536 length with `<=>` so we know cosine distance works. Do not mix lengths.
 
 Illustrative sketches (not the migration file; dimension must match the model when SQL is real):
 
@@ -100,8 +100,8 @@ order by ordinal_position;
 -- 3) null embedding is allowed (intent: a searchable row still needs a vector later)
 -- select id, title, embedding from public.properties where embedding is null;
 
--- 4) operator smoke test — only after DIMENSION_TODO is a real integer
--- select '[...]'::vector(DIMENSION_TODO) <=> '[...]'::vector(DIMENSION_TODO) as cosine_distance;
+-- 4) operator smoke test — two literals of length 1536
+-- select '[...]'::vector(1536) <=> '[...]'::vector(1536) as cosine_distance;
 ```
 
 A failed check: vector column exists but extension `vector` is missing; or `embedding` type is `text`/`jsonb` instead of `vector`; or dimension disagrees with the data model.
@@ -115,13 +115,13 @@ A failed check: vector column exists but extension `vector` is missing; or `embe
 - Production RLS hardening beyond what `docs/data-model-and-rls-matrix.md` already requires (no RLS redesign in this slice)
 - Hybrid keyword + vector ranking, maps, price/beds filters, or re-ranking
 - Vector index (IVFFlat/HNSW) for this first migration
-- Choosing a vendor or replacing **DIMENSION_TODO** with 1536 “because docs often say 1536”
+- Choosing a vendor **name** (dimension is already 1536)
 
 ## Handoff to next step
 
 The coding agent must implement **only** ordered goals **1–2**:
 
 1. `create extension if not exists vector`
-2. `alter table public.properties add column embedding vector(DIMENSION_TODO)` (nullable)
+2. `alter table public.properties add column embedding vector(1536)` (nullable)
 
 Names and dimension come from `docs/embedding-data-model.md`. Do not silently change vector size or table name. Do not add an index unless this plan is updated first. Verification queries (section above) run after that SQL, before seed or UI.

@@ -56,7 +56,11 @@ create table if not exists public.properties (
       'archived'
     )),
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  -- Semantic search vector. Requires extension `vector`
+  -- (20250315000000_enable_pgvector_properties.sql runs first).
+  -- Dimension 1536 matches docs/embedding-data-model.md. Null until backfill.
+  embedding vector(1536)
 );
 
 create index if not exists properties_owner_id_idx

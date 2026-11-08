@@ -70,7 +70,7 @@ Rules:
 
 - Always build listing embeddings **and** (when we re-embed) from this same recipe. If later code embeds only `title`, that is a fail against this contract.
 - Do **not** embed `id`, `owner_id`, `city`, `status`, timestamps, or price-like numbers as if they were narrative meaning.
-- Buyer **queries** are embedded as the query text itself, using the **same model and same DIMENSION_TODO** as listings (`docs/vector-search-learner-notes.md`).
+- Buyer **queries** are embedded as the query text itself, using the **same model and same 1536 dimension** as listings (`docs/vector-search-learner-notes.md`).
 - Store the **raw** `title` and `description` unchanged. The vector is a **separate** column derived from them so we can re-embed later without losing the listing.
 
 Example (requirements query 1 meaning-match, different words):
@@ -83,15 +83,15 @@ Example (requirements query 1 meaning-match, different words):
 
 | Field | Type (logical) | Required | Notes |
 |-------|----------------|----------|-------|
-| embedding | vector(DIMENSION_TODO) | yes after backfill | Fixed dimension. Same size for every property row and every query vector. |
+| embedding | vector(1536) | yes after backfill | Fixed dimension. Same size for every property row and every query vector. |
 
-Logical type name: **vector(DIMENSION_TODO)**. That is the only size this doc uses.
+Logical type name: **vector(1536)**. That is the only size this doc uses. Locked in `supabase/migrations/20250315000000_enable_pgvector_properties.sql`.
 
-### Dimension placeholder
+### Dimension (locked)
 
-- Use **DIMENSION_TODO** everywhere the vector size appears in this contract, the later migration, and TypeScript types until a model is chosen.
-- A number such as 1536 sometimes appears in vendor docs. **We have not chosen a model.** Do not treat 1536 as our size. When a later step picks a model, replace **DIMENSION_TODO** in one pass (this doc, migration, types).
-- **Critical:** query vectors and stored vectors must use the **same model and same DIMENSION_TODO**. Mismatched sizes break insert or search. Mixed models in one column are a fail (`docs/embeddings-learner-notes.md`, requirements success criteria).
+- Use **1536** everywhere the vector size appears in this contract, the migration, and later TypeScript types.
+- **Critical:** query vectors and stored vectors must use the **same model and same 1536 dimension**. Mismatched sizes break insert or search. Mixed models in one column are a fail (`docs/embeddings-learner-notes.md`, requirements success criteria).
+- Do not change 1536 in SQL only or in app code only—update this doc, `docs/pgvector-setup-plan.md`, the migration, and the embedding helper in one pass.
 
 ### Nullability and backfill
 
@@ -120,7 +120,7 @@ Do not replace `description` with the vector. You need both: text for the UI (id
 
 - One `properties` table (the existing one) with id, listing fields, and **one** `embedding` column
 - One embedding per property for this tutorial
-- Clear embedding input recipe (`title` + blank line + `description`) and a single **DIMENSION_TODO**
+- Clear embedding input recipe (`title` + blank line + `description`) and a single dimension **1536**
 - Seed/backfill path for a small sample set that can exercise the four requirements queries (cabin/water/rental, family/schools, downtown/walkable, farmland control)
 
 **Out of scope (do not model yet)**
@@ -132,24 +132,24 @@ Do not replace `description` with the vector. You need both: text for the UI (id
 - Map search; price / beds / baths **filters**
 - Full-text keyword indexes as a replacement for vectors
 - Production model keys, rate limits, or batch job infrastructure
-- Locking a vendor name or a numeric dimension in this file (that is **DIMENSION_TODO** plus an open question)
+- Locking a vendor **name** in this file (dimension is 1536; the model that emits 1536-d vectors is still an open question)
 
 ## Consistency checklist (must pass before migration)
 
 - [x] Every field has a clear purpose tied to requirements (searchable meaning vs display vs existing owner/status)
 - [x] Primary key defined (`id`)
 - [x] Embedding input text recipe is explicit (`title` + `\n\n` + `description`)
-- [x] Single dimension placeholder used consistently (**DIMENSION_TODO** only)
+- [x] Single dimension used consistently (**1536** only)
 - [x] Raw text and vector are separate
 - [x] Null rules for embedding are stated (temporary null; required after backfill for search)
 - [x] Out-of-scope items are listed so the agent does not invent them later
-- [x] Query and stored vectors must share the same model and **DIMENSION_TODO**
+- [x] Query and stored vectors must share the same model and **1536** dimension
 
 ## Open questions
 
-Resolve in the pgvector plan / implementation steps, then update **DIMENSION_TODO** in one pass:
+Resolve in later implementation steps:
 
-- Exact embedding **model name** and final dimension (replace DIMENSION_TODO everywhere)
+- Exact embedding **model name** that produces **1536**-dimension vectors
 - Final similarity operator / distance metric in SQL (align with `docs/vector-search-learner-notes.md`; cosine is the reminder, not a locked operator yet)
 - Index type for pgvector (later plan)
 - Whether demo seed rows live as published sample listings on `public.properties` or a tiny dedicated seed set — still **one** table, not a new product surface
@@ -160,4 +160,4 @@ Resolve in the pgvector plan / implementation steps, then update **DIMENSION_TOD
 
 Next: plan Supabase pgvector enablement and migration order using this doc as the schema contract (`docs/pgvector-setup-plan.md`).
 
-The migration must: enable pgvector, add `embedding vector(DIMENSION_TODO)` to `public.properties`, and not invent photos, payments, or a second properties table.
+The migration must: enable pgvector, add `embedding vector(1536)` to `public.properties`, and not invent photos, payments, or a second properties table.
