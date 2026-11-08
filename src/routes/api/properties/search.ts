@@ -32,6 +32,20 @@ export const Route = createFileRoute('/api/properties/search')({
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Search failed'
           console.error('property search failed', message)
+          const configured =
+            message.includes('MISSING_API_KEY') ||
+            message.includes('Missing SUPABASE_URL') ||
+            message.includes('SUPABASE_SERVICE_ROLE_KEY')
+          if (configured) {
+            return Response.json(
+              {
+                error:
+                  'Search is not configured (missing embedding or Supabase server env).',
+                results: [],
+              },
+              { status: 503 },
+            )
+          }
           return Response.json(
             { error: 'Search failed', results: [] },
             { status: 500 },
