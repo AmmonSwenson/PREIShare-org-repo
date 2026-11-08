@@ -6,7 +6,7 @@
 
 ## Migration file
 
-- **Path:** `supabase/migrations/20250321000000_property_listings.sql`
+- **Path:** `supabase/migrations/20250321000001_property_listings.sql`
 - **What it creates:** table `public.property_listings`, indexes on `owner_id` and `(owner_id, status)`, `updated_at` trigger, RLS enabled, four own-row policies
 - **What it does not create:** anon/public read policies, `USING (true)` writes, `GRANT ALL`, service-role usage, image/search tables
 
@@ -18,7 +18,7 @@ Do this against the PREIshare **Supabase** project (the `auth` schema must exist
 
 1. Open [Supabase Dashboard](https://supabase.com/dashboard) → your PREIshare project.
 2. Go to **SQL Editor** → **New query**.
-3. Paste the **full** contents of `supabase/migrations/20250321000000_property_listings.sql`.
+3. Paste the **full** contents of `supabase/migrations/20250321000001_property_listings.sql`.
 4. Run the query and confirm success (no error banner).
 5. Open **Table Editor** → `property_listings`.
 6. Confirm the table exists and the UI shows **RLS enabled** (lock / “RLS” badge).

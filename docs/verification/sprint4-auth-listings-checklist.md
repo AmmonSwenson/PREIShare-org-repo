@@ -18,10 +18,10 @@ This pass records **only checks that were actually run**. Live Table Editor, Use
 
 | # | Check | Result | Evidence |
 |---|--------|--------|----------|
-| 1.1 | `property_listings` (or agreed table name) exists in Supabase | FAIL | Could not open Table Editor. This environment has no `.env.local` and no live project URL. Follow-up: apply `supabase/migrations/20250321000000_property_listings.sql` in SQL Editor, then confirm Table Editor shows `property_listings`. |
+| 1.1 | `property_listings` (or agreed table name) exists in Supabase | FAIL | Could not open Table Editor. This environment has no `.env.local` and no live project URL. Follow-up: apply `supabase/migrations/20250321000001_property_listings.sql` in SQL Editor, then confirm Table Editor shows `property_listings`. |
 | 1.2 | RLS is **enabled** on the listings table | FAIL | Not observed on a live project. The **migration file** does include `alter table public.property_listings enable row level security;` (`docs/data-model/rls-policy-review.md`). Re-test after apply. |
 | 1.3 | Policies match `docs/data-model/rls-policy-review.md` (select/insert/update scoped to owner) | FAIL | Live Policies tab not opened. Repo migration defines `listings_select_own`, `listings_insert_own`, `listings_update_own`, `listings_delete_own` for `authenticated` with `owner_id = auth.uid()` (INSERT/UPDATE WITH CHECK). No `anon` policy, no `USING (true)`. Confirm those four names in the dashboard after apply. |
-| 1.4 | Migration file present: `supabase/migrations/20250321000000_property_listings.sql` | PASS | File exists in the repo (`ls` 2026-10-24). Creates `public.property_listings` with `owner_id` FK to `auth.users`. |
+| 1.4 | Migration file present: `supabase/migrations/20250321000001_property_listings.sql` | PASS | File exists in the repo (`ls` 2026-10-24). Creates `public.property_listings` with `owner_id` FK to `auth.users`. |
 
 ## 2. Authentication & session
 
@@ -78,7 +78,7 @@ Repo wiring for auth, protected dashboard, listings UI, user-scoped server listi
 
 **Notes for handoff (Step 12):**
 
-- Apply `supabase/migrations/20250321000000_property_listings.sql` on the PREIshare Supabase project; confirm RLS + four `listings_*_own` policies (`docs/data-model/rls-policy-review.md`).
+- Apply `supabase/migrations/20250321000001_property_listings.sql` on the PREIshare Supabase project; confirm RLS + four `listings_*_own` policies (`docs/data-model/rls-policy-review.md`).
 - Create `.env.local` from `.env.example` (never commit it). Restart the dev server.
 - User A: sign up → login → `/dashboard/listings/new` → confirm row on index **and** in Table Editor.
 - User B (incognito): listings page must not show User A’s title.

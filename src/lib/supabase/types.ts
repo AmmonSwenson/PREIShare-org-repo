@@ -1,7 +1,7 @@
 /**
  * Shared Database shape for @supabase/supabase-js.
  * Columns match docs/data-model/property-listings-schema.md
- * and supabase/migrations/20250321000000_property_listings.sql.
+ * and supabase/migrations/20250321000001_property_listings.sql.
  */
 import type { ListingStatus } from '../../types/listing-status'
 import type { PropertyType } from '../../types/property-type'

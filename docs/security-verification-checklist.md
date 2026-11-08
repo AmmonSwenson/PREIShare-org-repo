@@ -1,8 +1,8 @@
 # Security verification checklist — PREIshare sponsor auth & properties
 
-**Date:** 2026-10-24 (America/Denver)  
+**Date:** 2026-11-07 (America/Denver)  
 **Verifier:** Ammon Swenson  
-**Build / branch:** `main` at `91a26b7` (routes and clients as of this pass)  
+**Build / branch:** `main` (properties layout Outlet fix; live Auth still needs `.env.local`)  
 **Related docs:** `docs/sponsor-auth-requirements.md`, `docs/env-var-checklist.md`, `docs/data-model-and-rls-matrix.md`
 
 Status values: `pass` | `fail` | `not-run`
@@ -41,9 +41,9 @@ This environment has **no** gitignored `.env` / `.env.local` and no live Supabas
 
 | # | Check | How you verified | Status | Notes |
 |---|--------|------------------|--------|-------|
-| 3.1 | Signed-in sponsor sees property list UI from `src/routes/dashboard/properties.tsx` | Could not reach the page while authenticated (blocked by 2.2). Signed-out visit redirects (2.1) | not-run | Route exists; loader calls `createSupabaseServerClient` then `from('properties').select('id, title, city, status, created_at')` with **no** React filter-by-owner |
+| 3.1 | Signed-in sponsor sees property list UI from `src/routes/dashboard/properties.index.tsx` | Could not reach the page while authenticated against live Auth (blocked by 2.2). Signed-out visit redirects (2.1). Local layout check: `/dashboard/properties` renders “Your properties” + empty state once the dashboard session gate is satisfied | not-run | Loader still lives on the **index** route; it calls `createSupabaseServerClient` then `from('properties').select('id, title, city, status, created_at')` with **no** React filter-by-owner |
 | 3.2 | List shows only rows owned by the current sponsor (per docs/data-model-and-rls-matrix.md) | No live Postgres session. Did not compare UI titles to Table Editor | not-run | Intended control: policy `properties_select_own` `USING (owner_id = auth.uid())`. Must not query with the service-role helper |
-| 3.3 | Empty state is safe (no error that leaks other tenants’ data) | Did not observe the signed-in empty UI. Read `properties.tsx`: empty copy is “No properties yet”; errors are the generic string “Could not load properties. Try again.” | not-run | File review looks safe; still needs a signed-in empty screenshot |
+| 3.3 | Empty state is safe (no error that leaks other tenants’ data) | Read `properties.index.tsx`: empty copy is “No properties yet”; errors are the generic string “Could not load properties. Try again.” | not-run | File review looks safe; live Auth empty screenshot still needed |
 
 **Section result:** not-run
 
@@ -53,11 +53,11 @@ This environment has **no** gitignored `.env` / `.env.local` and no live Supabas
 
 | # | Check | How you verified | Status | Notes |
 |---|--------|------------------|--------|-------|
-| 4.1 | Create form on `src/routes/dashboard/properties.new.tsx` requires an authenticated session | Logged-out `GET /dashboard/properties/new` → **307** `/login` | pass | Logged-in form render not observed |
+| 4.1 | Create form on `src/routes/dashboard/properties.new.tsx` requires an authenticated session and actually renders | Logged-out `GET /dashboard/properties/new` → **307** `/login`. After the Outlet fix, a signed-in visit to `/dashboard/properties/new` returns the create form (heading “Add property”, Title / City / Description, “Create property”) and does **not** keep showing the list | pass | Nested under `properties.tsx`, which now renders `<Outlet />`. List UI moved to `properties.index.tsx` so `/new` replaces the list instead of stacking on it |
 | 4.2 | Successful create inserts a row owned by the current sponsor | No live insert | not-run | Code sets `owner_id: user.id` from `getUser` on the server; form fields are title/city/description only (matrix columns, not a client `owner_id`) |
 | 4.3 | Create failure (validation or RLS) does not expose secret keys or raw DB internals in the UI | No live insert failure. File review: `publicInsertError` strips messages matching `service.role` / `jwt` / `apikey` / `secret`. Title `required` in HTML. Navigate to list only when `result.ok` | not-run | Re-test: empty title (browser validation) and a forced RLS/FK failure after env is set |
 
-**Section result:** fail (4.1 passed for logged-out block; create-as-owner not proven live)
+**Section result:** fail (4.1 passed for logged-out block and signed-in form render; create-as-owner not proven live)
 
 ---
 
@@ -76,15 +76,15 @@ This environment has **no** gitignored `.env` / `.env.local` and no live Supabas
 
 | Gap (checklist #) | What was wrong | Fix applied (files) | Re-test status |
 |-------------------|----------------|---------------------|----------------|
-| | | | |
+| 4.1 create form never appeared | `/dashboard/properties/new` is a child of `properties.tsx`, but that parent rendered the list and had no `<Outlet />`, so “Add property” kept showing the list | `src/routes/dashboard/properties.tsx` is now a layout that renders `<Outlet />`; list moved to `src/routes/dashboard/properties.index.tsx`; create stays `src/routes/dashboard/properties.new.tsx` | pass — `/new` renders the form; list stays on `/dashboard/properties` |
 
-None found in this pass that were still failing in code after earlier route work. Remaining gaps are **environment** (no `.env.local`, no two Auth users, migration not applied to a live project)—not additional UI bugs observed today.
+Remaining environment gaps (no `.env.local`, no two Auth users, migration not applied to a live project) are unchanged: 2.2, 2.4, 3.2, 4.2, 4.3, 5.* are still `not-run`.
 
 ---
 
 ## 7. Residual risks (honest leftovers)
 
-- **No live Supabase in this verifier environment.** Checks 2.2, 2.4, 3.*, 4.2, 4.3, 5.* are `not-run`. A stakeholder demo of “real listings under RLS” is **not** proven here.
+- **No live Supabase in this verifier environment.** Checks 2.2, 2.4, 3.2, 4.2, 4.3, 5.* are `not-run`. A stakeholder demo of “real listings under RLS” is **not** proven here. The nested-route Outlet bug (list shown instead of the create form) **is** fixed.
 - **Single (zero) test sponsor.** Cross-sponsor UI isolation must be re-run with User A and User B after env + migration.
 - **Authenticated Network tab not inspected.** File review shows the browser client never reads `SUPABASE_SERVICE_ROLE_KEY`, but a signed-in DevTools pass is still needed to confirm no service-role `apikey` header on list/create requests.
 - **Two listing schemas exist in the repo.** This topic’s UI uses `public.properties` (`docs/data-model-and-rls-matrix.md`). An earlier sprint path still has `public.property_listings`. Operators must apply the **properties** migration this checklist talks about, or list/create will fail against the wrong table.
@@ -98,6 +98,6 @@ None found in this pass that were still failing in code after earlier route work
 **Ready to show stakeholders?** no
 
 **Summary (3–5 sentences):**  
-I personally verified secret hygiene on disk: `src/lib/supabase.client.ts` reads only `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`; the service-role **name** is confined to server helpers and docs; `.env.example` is placeholders; no JWT-shaped secrets are in git. I personally verified signed-out routing: `/dashboard`, `/dashboard/properties`, and `/dashboard/properties/new` return **307** to `/login`; a failed login submit stays on `/login` with a visible alert and does not open the dashboard. I did **not** complete a live sponsor login, create, logout, or two-user isolation pass because this environment has no `.env.local` and no second Auth user. RLS **intent** in the migration matches the matrix (`owner_id = auth.uid()`, `WITH CHECK` on insert/update, no anon access), but that is design review, not a proven runtime. Do not demo this as production-ready until 2.2, 3.2, 4.2, and 5.1 are `pass`.
+I personally verified secret hygiene on disk: `src/lib/supabase.client.ts` reads only `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`; the service-role **name** is confined to server helpers and docs; `.env.example` is placeholders; no JWT-shaped secrets are in git. I personally verified signed-out routing: `/dashboard`, `/dashboard/properties`, and `/dashboard/properties/new` return **307** to `/login`. I also verified the nested-route bug: `properties.tsx` now renders `<Outlet />`, the list lives on `properties.index.tsx`, and a signed-in visit to `/dashboard/properties/new` shows the create form instead of the list. I did **not** complete a live sponsor login, create-as-owner, logout, or two-user isolation pass because this environment has no `.env.local` and no second Auth user. RLS **intent** in the migration matches the matrix (`owner_id = auth.uid()`, `WITH CHECK` on insert/update, no anon access), but that is design review, not a proven runtime. Do not demo this as production-ready until 2.2, 3.2, 4.2, and 5.1 are `pass`.
 
-**Sign-off:** Ammon Swenson, 2026-10-24 (America/Denver)
+**Sign-off:** Ammon Swenson, 2026-11-07 (America/Denver)

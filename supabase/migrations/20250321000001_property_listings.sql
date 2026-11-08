@@ -1,4 +1,4 @@
--- supabase/migrations/20250321000000_property_listings.sql
+-- supabase/migrations/20250321000001_property_listings.sql
 -- Implements docs/data-model/property-listings-schema.md
 -- Owner is auth.users(id) so RLS can use auth.uid().
 -- No anon policies. No USING (true) write access.

@@ -3,8 +3,8 @@
 **Project:** PREIshare dashboard  
 **Sprint:** 4 Topic 2 — sponsor auth, env split, RLS, list/create  
 **Audience:** Sponsors and the next-topic implementer  
-**Status date:** 2026-10-24 (America/Denver)  
-**Verification:** `docs/security-verification-checklist.md` — **not ready for stakeholders** (secret hygiene and signed-out routing passed; live login, create, and two-user isolation were **not-run**)
+**Status date:** 2026-11-07 (America/Denver)  
+**Verification:** `docs/security-verification-checklist.md` — **not ready for stakeholders** (secret hygiene, signed-out routing, and the `/properties/new` Outlet fix passed; live login, create-as-owner, and two-user isolation were **not-run**)
 
 ## Client story outcomes
 
@@ -45,7 +45,8 @@ Live “sign in, see only my rows, create as owner, User B cannot see User A” 
 - `src/lib/supabase.server.ts` — server-only clients (session + optional service-role helper)
 - `src/routes/login.tsx` — sponsor login
 - `src/routes/dashboard.tsx` — session-aware dashboard shell
-- `src/routes/dashboard/properties.tsx` — protected property list
+- `src/routes/dashboard/properties.tsx` — properties layout; renders `<Outlet />` so `/new` can appear
+- `src/routes/dashboard/properties.index.tsx` — protected property list
 - `src/routes/dashboard/properties.new.tsx` — create; `owner_id` from session, not the form
 - `supabase/migrations/20250321000000_sponsors_properties_rls.sql` — schema + RLS for `profiles` / `properties`
 
@@ -55,7 +56,7 @@ Copied from verification — do **not** treat these as done:
 
 - Live valid login (checklist **2.2**) and logout click-through (**2.4**) were **not-run** (no `.env.local` / live Auth in the verifier environment).
 - Signed-in property list, owner-only isolation, and empty-state screenshot (**3.1–3.3**) were **not-run**.
-- Successful create-as-owner and live create-failure UI (**4.2–4.3**) were **not-run**.
+- Nested `/dashboard/properties/new` now renders through `properties.tsx` `<Outlet />` (list is `properties.index.tsx`). The form appears; live create-as-owner and create-failure UI (**4.2–4.3**) were **not-run**.
 - Cross-sponsor checks (**5.1–5.2**) were **not-run** — no second test user. Policy review is not a substitute for User B in the UI.
 - Authenticated browser Network tab was not inspected for a service-role header.
 - Listing fields on `properties` are minimal (`title`, `city`, `status`, timestamps). Richer PREIshare domain columns (full address, price, property type, contacts, media) are out of scope for this topic.

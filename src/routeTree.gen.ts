@@ -25,6 +25,7 @@ import { Route as DashboardPropertiesRouteImport } from './routes/dashboard/prop
 import { Route as ApiPropertiesSearchRouteImport } from './routes/api/properties/search'
 import { Route as DashboardListingsIndexRouteImport } from './routes/dashboard/listings/index'
 import { Route as DashboardListingsNewRouteImport } from './routes/dashboard/listings/new'
+import { Route as DashboardPropertiesIndexRouteImport } from './routes/dashboard/properties.index'
 import { Route as DashboardPropertiesNewRouteImport } from './routes/dashboard/properties.new'
 
 const IndexRoute = IndexRouteImport.update({
@@ -107,6 +108,12 @@ const DashboardListingsNewRoute = DashboardListingsNewRouteImport.update({
   path: '/listings/new',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPropertiesIndexRoute =
+  DashboardPropertiesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardPropertiesRoute,
+  } as any)
 const DashboardPropertiesNewRoute = DashboardPropertiesNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -131,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings/': typeof DashboardListingsIndexRoute
+  '/dashboard/properties/': typeof DashboardPropertiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,12 +151,12 @@ export interface FileRoutesByTo {
   '/dashboard/deals': typeof DashboardDealsRoute
   '/dashboard/portfolio': typeof DashboardPortfolioRoute
   '/dashboard/profile': typeof DashboardProfileRoute
-  '/dashboard/properties': typeof DashboardPropertiesRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
   '/api/properties/search': typeof ApiPropertiesSearchRoute
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings': typeof DashboardListingsIndexRoute
+  '/dashboard/properties': typeof DashboardPropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings/': typeof DashboardListingsIndexRoute
+  '/dashboard/properties/': typeof DashboardPropertiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings/'
+    | '/dashboard/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -202,12 +212,12 @@ export interface FileRouteTypes {
     | '/dashboard/deals'
     | '/dashboard/portfolio'
     | '/dashboard/profile'
-    | '/dashboard/properties'
     | '/dashboard'
     | '/api/properties/search'
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings'
+    | '/dashboard/properties'
   id:
     | '__root__'
     | '/'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings/'
+    | '/dashboard/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -353,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardListingsNewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/properties/': {
+      id: '/dashboard/properties/'
+      path: '/'
+      fullPath: '/dashboard/properties/'
+      preLoaderRoute: typeof DashboardPropertiesIndexRouteImport
+      parentRoute: typeof DashboardPropertiesRoute
+    }
     '/dashboard/properties/new': {
       id: '/dashboard/properties/new'
       path: '/new'
@@ -379,10 +397,12 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface DashboardPropertiesRouteChildren {
   DashboardPropertiesNewRoute: typeof DashboardPropertiesNewRoute
+  DashboardPropertiesIndexRoute: typeof DashboardPropertiesIndexRoute
 }
 
 const DashboardPropertiesRouteChildren: DashboardPropertiesRouteChildren = {
   DashboardPropertiesNewRoute: DashboardPropertiesNewRoute,
+  DashboardPropertiesIndexRoute: DashboardPropertiesIndexRoute,
 }
 
 const DashboardPropertiesRouteWithChildren =
